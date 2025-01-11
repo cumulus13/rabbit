@@ -1,0 +1,1 @@
+podman run --rm --name setup-rabbitmq -v rabbitmq_data:/var/lib/rabbitmq rabbitmq:3-management sh -c "head -c 20 /dev/urandom > /var/lib/rabbitmq/.erlang.cookie && chmod 400 /var/lib/rabbitmq/.erlang.cookie && chown rabbitmq:rabbitmq /var/lib/rabbitmq/.erlang.cookie"

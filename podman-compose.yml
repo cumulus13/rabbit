@@ -1,0 +1,28 @@
+version: '3.9'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"  # RabbitMQ AMQP
+      - "15672:15672"  # Management Web Plugin
+      - "61613:61613"  # STOMP Plugin
+      - "2222:22"  # SSH access to RabbitMQ container
+    environment:
+      RABBITMQ_DEFAULT_USER: root
+      RABBITMQ_DEFAULT_PASS: root
+      RABBITMQ_DEFAULT_VHOST: /
+      ROOT_PASSWORD: root  # Password for SSH access
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq  # Persistent RabbitMQ storage
+    command: >
+      sh -c "rabbitmq-plugins enable rabbitmq_management rabbitmq_stomp &&
+             echo 'root:$ROOT_PASSWORD' | chpasswd &&
+             service ssh start &&
+             rabbitmq-server"
+    stdin_open: true  # Keep stdin open for SSH
+    tty: true  # Allocate a pseudo-TTY for SSH
+
+volumes:
+  rabbitmq_data:
