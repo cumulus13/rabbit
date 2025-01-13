@@ -68,11 +68,50 @@ RUN apk update && apk add --no-cache \
     ipython \
     py3-pip \
     py3-setuptools \
+    rsyslog \
+    rsyslog-clickhouse \
+    rsyslog-crypto \
+    rsyslog-dbg \
+    rsyslog-doc \
+    rsyslog-elasticsearch \
+    rsyslog-gssapi \
+    rsyslog-hiredis \
+    rsyslog-http \
+    rsyslog-imdocker \
+    rsyslog-libdbi \
+    rsyslog-mmanon \
+    rsyslog-mmaudit \
+    rsyslog-mmcount \
+    rsyslog-mmdblookup \
+    rsyslog-mmfields \
+    rsyslog-mmjsonparse \
+    rsyslog-mmnormalize \
+    rsyslog-mmpstrucdata \
+    rsyslog-mmrm1stspace \
+    rsyslog-mmsequence \
+    rsyslog-mmsnmptrapd \
+    rsyslog-mmtaghostname \
+    rsyslog-mmutf8fix \
+    rsyslog-mysql \
+    rsyslog-openrc \
+    rsyslog-pgsql \
+    rsyslog-pmaixforwardedfrom \
+    rsyslog-pmlastmsg \
+    rsyslog-pmsnare \
+    rsyslog-rabbitmq \
+    rsyslog-relp \
+    rsyslog-snmp \
+    rsyslog-testing \
+    rsyslog-tls \
+    rsyslog-udpspoof \
+    rsyslog-uxsock \
+    rsyslog-zmq \
     && mkdir -p /var/run/sshd \
     && chmod 0755 /var/run/sshd
 
-RUN pip install pika tenacity python-dotenv ctraceback clipboard pydebugger requests bs4 -t $(python -c "import sys;print(sys.path[-1])")
-RUN ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N "" -q && ssh-keygen -A
+RUN pip install pika tenacity python-dotenv ctraceback clipboard pydebugger requests bs4 ipython -t $(python -c "import sys;print(sys.path[-1])")
+# RUN ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N "" -q && ssh-keygen -A
+COPY conf/id_rsa ~/.ssh/
 
 # Ensure the RabbitMQ configuration directory exists
 RUN mkdir -p /etc/rabbitmq && \
