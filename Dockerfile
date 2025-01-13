@@ -9,6 +9,8 @@ ENV RABBITMQ_PASSWORD=root
 RUN apk update && apk add --no-cache \
     bash \
     zsh \
+    util-linux-misc \
+    tzdata \
     curl \
     wget \
     rabbitmq-server \

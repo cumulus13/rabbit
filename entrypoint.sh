@@ -1,5 +1,7 @@
 #!/bin/bash
-
+echo "Set Date Time"
+ln -sf /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
+echo "Asia/Jakarta" > /etc/timezone
 echo "Start RabbitMQ server in the background"
 rabbitmq-server -detached
 # rabbitmq-server &
