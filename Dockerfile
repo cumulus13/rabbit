@@ -1,47 +1,3 @@
-# # Use the RabbitMQ management image as the base
-# FROM rabbitmq:3-management
-
-# # Set environment variables for RabbitMQ
-# ENV RABBITMQ_DEFAULT_USER=root \
-#     RABBITMQ_DEFAULT_PASS=root
-
-# # Install OpenSSH server
-# USER root
-# RUN apt-get update && apt-get install -y openssh-server && \
-#     mkdir /var/run/sshd && \
-#     echo 'root:root' | chpasswd && \
-#     sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
-#     sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config && \
-#     echo "UseDNS no" >> /etc/ssh/sshd_config
-
-# # Ensure permissions and ownership are correct for RabbitMQ
-# RUN chown -R rabbitmq:rabbitmq /var/lib/rabbitmq
-
-# # Generate the .erlang.cookie file as root and set correct permissions
-# RUN head -c 20 /dev/urandom > /var/lib/rabbitmq/.erlang.cookie && \
-#     chmod 600 /var/lib/rabbitmq/.erlang.cookie && \
-#     chown rabbitmq:rabbitmq /var/lib/rabbitmq/.erlang.cookie
-
-# # Expose RabbitMQ and SSH ports
-# EXPOSE 5672 15672 15671 61613 22
-
-# # Start both SSH and RabbitMQ servers
-# CMD service ssh start && rabbitmq-server
-
-# # CMD \
-# #     if [ ! -f /var/lib/rabbitmq/.erlang.cookie ]; then \
-# #         head -c 20 /dev/urandom > /var/lib/rabbitmq/.erlang.cookie && \
-# #         chmod 400 /var/lib/rabbitmq/.erlang.cookie && \
-# #         chown rabbitmq:rabbitmq /var/lib/rabbitmq/.erlang.cookie && \
-# #         echo ".erlang.cookie created and permissions set."; \
-# #     else \
-# #         echo ".erlang.cookie already exists."; \
-# #     fi && \
-# #     service ssh start && rabbitmq-server
-
-# Use the official Alpine base image
-# Use the official Alpine base image
-# Use the official Alpine base image
 FROM alpine:latest
 
 # Set environment variables for RabbitMQ
@@ -52,6 +8,9 @@ ENV RABBITMQ_PASSWORD=root
 # Update and install dependencies
 RUN apk update && apk add --no-cache \
     bash \
+    zsh \
+    curl \
+    wget \
     rabbitmq-server \
     openssh \
     openrc \
@@ -108,6 +67,12 @@ RUN apk update && apk add --no-cache \
     rsyslog-zmq \
     && mkdir -p /var/run/sshd \
     && chmod 0755 /var/run/sshd
+
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" && \
+    chsh -s /bin/zsh
+RUN git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/themes/powerlevel9k
+RUN cp -v ~/.zshrc ~/.zshrc.bck
+RUN sed -i 's/^ZSH_THEME="robbyrussell"/ZSH_THEME="powerlevel9k\/powerlevel9k"/' ~/.zshrc
 
 RUN pip install pika tenacity python-dotenv ctraceback clipboard pydebugger requests bs4 ipython -t $(python -c "import sys;print(sys.path[-1])")
 # RUN ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N "" -q && ssh-keygen -A
