@@ -22,7 +22,6 @@ rabbitmqctl --node rabbit@$HOSTNAME set_user_tags "$RABBITMQ_USER" administrator
 rabbitmqctl --node rabbit@$HOSTNAME set_permissions -p / "$RABBITMQ_USER" ".*" ".*" ".*"
 
 cat <<EOL > /etc/rsyslog.d/50-rabbitmq.conf
-module(load="imfile")
 input(type="imfile" File="/var/log/rabbitmq/rabbit@$HOSTNAME.log" Tag="rabbitmq" Severity="info" Facility="local0")
 local0.* /var/log/rabbitmq/rabbitmq@$HOSTNAME.log
 EOL

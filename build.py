@@ -139,4 +139,4 @@ class Build:
         
 
 if __name__ == '__main__':
-    Build.build()
+    Build.build(*sys.argv[1:])
