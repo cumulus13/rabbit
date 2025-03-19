@@ -34,14 +34,14 @@ def check_rabbitmq(keep = False, sleep = 5):
         # rabbitmq_running = is_service_running("rabbitmq-server")
         rabbitmq_running = is_service_running("beam.smp")
         port_5672_open = is_port_open("localhost", 5672)
-        port_15672_open = is_port_open("localhost", 15672)
+        # port_15672_open = is_port_open("localhost", 15672)
 
         print("\n--- RabbitMQ Status Check ---")
         print(f"RabbitMQ Server Running: {'Yes' if rabbitmq_running else 'No'}")
         print(f"Port 5672 (AMQP): {'Open' if port_5672_open else 'Closed'}")
-        print(f"Port 15672 (Management): {'Open' if port_15672_open else 'Closed'}")
+        # print(f"Port 15672 (Management): {'Open' if port_15672_open else 'Closed'}")
 
-        if rabbitmq_running and port_5672_open and port_15672_open:
+        if rabbitmq_running and port_5672_open:# and port_15672_open:
             print(f"{get_date()} - RabbitMQ is running, and ports are open.")
             if not keep: break
         else:
